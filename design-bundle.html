@@ -1,0 +1,2544 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BottleNet | Connect</title>
+  <style>
+/* System fonts keep the captive portal independent of external font loading. */
+:root{
+  --ink:#202c29;
+  --muted:#74807b;
+  --green:#147653;
+  --green-soft:#eaf4ee;
+  --line:#e1e7e3;
+  --blue:#3175b5;
+  --bg:#f6f8f6
+}
+*{
+  box-sizing:border-box;
+  letter-spacing:0
+}
+body{
+  margin:0;
+  color:var(--ink);
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;
+  background:var(--bg)
+}
+button,input,select{
+  font:inherit
+}
+button,a,input,select,summary{
+  -webkit-tap-highlight-color:transparent
+}
+button,a{
+  transition:background .15s,color .15s
+}
+button{
+  cursor:pointer
+}
+a{
+  color:inherit;
+  text-decoration:none
+}
+button:disabled{
+  opacity:.5;
+  cursor:not-allowed
+}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{
+  outline:3px solid #7eafd3;
+  outline-offset:3px
+}
+[hidden]{
+  display:none!important
+}
+h1,h2,h3,p{
+  margin:0
+}
+h1,h2,h3,.brand,.timer{
+  font-family:'Manrope',sans-serif
+}
+h1{
+  font-size:30px;
+  font-weight:800;
+  line-height:1.3
+}
+h2{
+  font-size:17px;
+  font-weight:800
+}
+h3{
+  font-size:14px;
+  font-weight:700
+}
+.muted{
+  color:var(--muted)
+}
+.eyebrow{
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:0;
+  color:var(--muted)
+}
+.brand{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  font-size:23px;
+  font-weight:800
+}
+.brand-mark{
+  display:grid;
+  place-items:center;
+  width:34px;
+  height:34px;
+  background:var(--green);
+  color:white;
+  border-radius:8px;
+  font-size:26px
+}
+.brand-dot{
+  width:6px;
+  height:6px;
+  background:var(--green);
+  border-radius:50%;
+  align-self:end;
+  margin-bottom:8px;
+  margin-left:-5px
+}
+.status-dot{
+  display:inline-block;
+  width:7px;
+  height:7px;
+  background:#31976b;
+  border-radius:50%;
+  flex-shrink:0
+}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  white-space:nowrap;
+  padding:4px 9px;
+  border-radius:5px;
+  font-size:11px;
+  font-weight:600;
+  background:#eef1ee;
+  color:#68766e
+}
+.badge.blue{
+  color:#28689f;
+  background:#edf4fc
+}
+.badge.green{
+  background:var(--green-soft);
+  color:var(--green)
+}
+.badge.red{
+  background:#fff0ee;
+  color:#ad4940
+}
+.badge.amber{
+  background:#fff4df;
+  color:#956c20
+}
+.button{
+  min-height:44px;
+  border-radius:6px;
+  padding:11px 17px;
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  font-weight:600;
+  border:1px solid transparent
+}
+.button.primary{
+  background:var(--green);
+  color:white
+}
+.button.primary:hover{
+  background:#105f43
+}
+.button.secondary{
+  background:white;
+  border-color:var(--line)
+}
+.button.secondary:hover{
+  background:#eef3ef
+}
+.full{
+  width:100%
+}
+.text-button{
+  font-size:12px;
+  color:var(--muted);
+  padding:8px;
+  background:none;
+  border:0
+}
+.text-button:hover{
+  color:var(--green)
+}
+.site-header{
+  height:88px;
+  max-width:1184px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 32px;
+  border-bottom:1px solid var(--line)
+}
+.station-label{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  font-size:10px;
+  color:var(--muted);
+  font-weight:600
+}
+.portal-main{
+  width:min(100% - 40px,460px);
+  margin:48px auto 38px
+}
+.portal-heading{
+  text-align:center;
+  margin-bottom:28px
+}
+.portal-heading .eyebrow{
+  color:var(--green)
+}
+.portal-heading h1{
+  margin:13px 0 10px;
+  font-size:32px;
+  line-height:1.35
+}
+.portal-heading p{
+  color:var(--muted);
+  font-size:13px
+}
+.connection-panel{
+  background:white;
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:24px;
+  box-shadow:0 6px 24px #20332905
+}
+.panel-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center
+}
+.network-label{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  font-size:12px;
+  font-weight:600
+}
+.wifi-symbol{
+  color:var(--blue);
+  font-size:20px
+}
+.timer-area{
+  text-align:center;
+  padding:34px 0 28px
+}
+.timer{
+  font-size:68px;
+  font-weight:700;
+  line-height:1.3;
+  font-variant-numeric:tabular-nums
+}
+.timer-area>.muted{
+  font-size:12px
+}
+.session-stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  padding:17px 0
+}
+.session-stats>div{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  align-items:center
+}
+.session-stats>div+div{
+  border-left:1px solid var(--line)
+}
+.session-stats .muted{
+  font-size:11px
+}
+.session-stats strong{
+  font-size:20px;
+  font-weight:700
+}
+.session-stats small{
+  font-size:12px;
+  font-weight:500
+}
+.feedback{
+  min-height:52px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  font-size:12px;
+  text-align:center
+}
+.feedback.error{
+  color:#ae4940
+}
+.connection-panel>.button{
+  font-size:14px;
+  height:48px
+}
+.reward-line{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  font-size:11px;
+  margin-top:17px;
+  flex-wrap:wrap
+}
+.reward-line>span:first-child{
+  color:var(--green);
+  font-size:18px
+}
+.impact-strip{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:23px 9px;
+  border-bottom:1px solid var(--line)
+}
+.impact-icon{
+  color:var(--green);
+  font-size:28px
+}
+.impact-strip strong{
+  font-size:12px
+}
+.impact-strip p{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:5px
+}
+.portal-bottom{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  font-size:10px;
+  color:var(--muted);
+  padding:19px 0
+}
+.portal-bottom a{
+  color:var(--green)
+}
+.portal-footer{
+  max-width:1120px;
+  margin:0 auto;
+  padding:22px 0;
+  border-top:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+  font-size:11px;
+  color:var(--muted)
+}
+.portal-footer>span:first-child{
+  font-weight:700
+}
+.demo-panel{
+  margin-top:12px;
+  border-top:1px dashed var(--line);
+  padding-top:14px;
+  color:var(--muted);
+  font-size:11px
+}
+.demo-panel summary{
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:8px
+}
+.demo-panel select{
+  margin:14px 10px;
+  padding:6px;
+  border:1px solid var(--line);
+  background:white;
+  border-radius:4px;
+  max-width:100%
+}
+.demo-panel p{
+  margin-top:8px
+}
+.deposit-controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  justify-content:center
+}
+.deposit-controls .button{
+  font-size:12px;
+  flex:1
+}
+.deposit-controls .text-button{
+  width:100%
+}
+.login-view{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:30px;
+  padding:24px
+}
+.login-panel{
+  width:min(100%,400px);
+  padding:35px 28px;
+  background:white;
+  border:1px solid var(--line);
+  border-radius:8px;
+  text-align:center
+}
+.login-icon{
+  display:grid;
+  place-items:center;
+  width:52px;
+  height:52px;
+  margin:0 auto 22px;
+  background:var(--green-soft);
+  color:var(--green);
+  border-radius:8px;
+  font-size:30px
+}
+.login-panel h1{
+  margin:10px 0
+}
+.pin-fields{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin:27px 0 0
+}
+.pin-fields input{
+  width:58px;
+  height:64px;
+  text-align:center;
+  font-size:26px;
+  background:var(--bg);
+  border:1px solid #ccd7cf;
+  border-radius:6px
+}
+.error-message{
+  color:#ad4940;
+  font-size:12px;
+  min-height:42px;
+  padding:10px 0
+}
+.demo-note{
+  font-size:11px;
+  color:var(--muted);
+  margin-top:20px
+}
+.admin-layout{
+  display:flex;
+  min-height:100vh
+}
+.sidebar{
+  width:230px;
+  flex-shrink:0;
+  background:#fff;
+  border-right:1px solid var(--line);
+  padding:30px 19px;
+  display:flex;
+  flex-direction:column;
+  position:fixed;
+  inset:0 auto 0 0
+}
+.sidebar .brand{
+  font-size:22px;
+  margin:0 7px
+}
+.sidebar-label{
+  margin:42px 12px 12px;
+  font-size:9px
+}
+.nav-item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-height:44px;
+  padding:11px 13px;
+  width:100%;
+  border:0;
+  background:none;
+  text-align:left;
+  color:#748078;
+  font-size:13px;
+  border-radius:5px;
+  margin-bottom:5px
+}
+.nav-item>span{
+  font-size:18px;
+  width:20px;
+  text-align:center
+}
+.nav-item:hover{
+  background:var(--bg)
+}
+.nav-item.active{
+  background:var(--green-soft);
+  color:var(--green);
+  font-weight:700
+}
+.sidebar-footer{
+  margin-top:auto
+}
+.station-card{
+  display:flex;
+  gap:9px;
+  align-items:center;
+  margin:20px 10px;
+  padding:15px 0;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line)
+}
+.station-card strong{
+  font-size:11px
+}
+.station-card small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  margin-top:3px
+}
+.admin-workspace{
+  margin-left:230px;
+  min-width:0;
+  width:calc(100% - 230px);
+  display:flex;
+  flex-direction:column
+}
+.admin-header{
+  height:78px;
+  border-bottom:1px solid var(--line);
+  background:white;
+  padding:0 36px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-size:11px
+}
+.admin-header>span{
+  display:flex;
+  gap:15px;
+  color:var(--muted)
+}
+.admin-header strong{
+  color:var(--ink);
+  font-weight:500
+}
+.admin-profile{
+  display:flex;
+  align-items:center;
+  gap:10px
+}
+.avatar{
+  display:grid;
+  place-items:center;
+  background:#e6eee8;
+  color:var(--green);
+  width:31px;
+  height:31px;
+  border-radius:50%;
+  font-weight:700
+}
+.admin-main{
+  padding:34px 36px;
+  max-width:1480px;
+  width:100%;
+  margin:0 auto
+}
+.page-heading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:28px
+}
+.page-heading h1{
+  font-size:27px;
+  margin:7px 0
+}
+.page-heading p{
+  font-size:12px
+}
+.page-heading>.button{
+  font-size:11px;
+  min-height:38px
+}
+.metrics{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:16px;
+  margin-bottom:27px
+}
+.metric{
+  background:white;
+  border:1px solid var(--line);
+  padding:19px;
+  border-radius:6px
+}
+.metric-label{
+  display:flex;
+  justify-content:space-between;
+  color:var(--muted);
+  font-size:11px;
+  gap:5px
+}
+.metric-value{
+  font-family:'Manrope',sans-serif;
+  font-size:29px;
+  font-weight:800;
+  margin:14px 0 9px
+}
+.metric-foot{
+  font-size:10px;
+  color:var(--green)
+}
+.overview-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.65fr) minmax(250px,1fr);
+  gap:26px;
+  margin-bottom:27px
+}
+.section-surface{
+  background:white;
+  border:1px solid var(--line);
+  border-radius:6px;
+  overflow:hidden
+}
+.section-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:19px 21px;
+  border-bottom:1px solid var(--line)
+}
+.section-title p{
+  font-size:11px;
+  color:var(--muted);
+  margin-top:5px
+}
+.section-title h2{
+  font-size:14px
+}
+.chart{
+  height:175px;
+  display:flex;
+  align-items:end;
+  gap:15px;
+  padding:25px 24px 0
+}
+.chart-column{
+  height:100%;
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:end;
+  flex-direction:column;
+  gap:8px;
+  min-width:0
+}
+.chart-bar{
+  background:#c1ddcc;
+  border-radius:3px 3px 0 0;
+  width:100%;
+  max-width:40px;
+  min-height:4px
+}
+.chart-column:last-child .chart-bar{
+  background:var(--green)
+}
+.chart-column span{
+  font-size:9px;
+  color:var(--muted);
+  height:18px
+}
+.chart-footer{
+  padding:16px 22px;
+  display:flex;
+  justify-content:space-between;
+  font-size:11px;
+  color:var(--muted)
+}
+.machine-summary{
+  padding:21px
+}
+.machine-summary-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:19px;
+  font-size:12px
+}
+.progress-track{
+  height:7px;
+  background:#edf0ed;
+  border-radius:4px;
+  overflow:hidden;
+  margin:11px 0
+}
+.progress-fill{
+  height:100%;
+  background:#d2a64d
+}
+.machine-summary p{
+  font-size:11px;
+  color:var(--muted)
+}
+.machine-summary .button{
+  font-size:11px;
+  margin-top:22px;
+  min-height:36px
+}
+.table-wrap{
+  overflow:auto
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  text-align:left;
+  white-space:nowrap;
+  font-size:12px
+}
+th{
+  background:#fafbf9;
+  color:var(--muted);
+  font-size:10px;
+  font-weight:500;
+  padding:12px 21px
+}
+td{
+  padding:15px 21px;
+  border-top:1px solid #eff2ef
+}
+td:first-child{
+  font-weight:500
+}
+.table-toolbar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  padding:16px 20px;
+  border-bottom:1px solid var(--line)
+}
+.field,select{
+  border:1px solid var(--line);
+  border-radius:5px;
+  padding:9px 11px;
+  background:white;
+  color:var(--ink)
+}
+.field{
+  min-width:0
+}
+.table-toolbar input{
+  flex:1
+}
+.admin-footer{
+  display:flex;
+  justify-content:space-between;
+  padding:18px 36px;
+  margin-top:auto;
+  color:var(--muted);
+  font-size:10px
+}
+.admin-toast{
+  font-size:12px;
+  color:var(--green);
+  min-height:28px;
+  padding-top:14px
+}
+.settings-form{
+  max-width:700px
+}
+.form-row{
+  padding:22px 0;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:25px
+}
+.form-row label{
+  font-weight:600;
+  font-size:13px
+}
+.form-row p{
+  font-size:11px;
+  color:var(--muted);
+  margin-top:5px
+}
+.form-row input[type=number]{
+  width:100px
+}
+.settings-form>.button{
+  margin-top:22px
+}
+.machine-details{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:24px
+}
+.detail-list{
+  padding:3px 21px
+}
+.detail-list>div{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:17px 0;
+  border-bottom:1px solid var(--line);
+  font-size:12px
+}
+.detail-list>div:last-child{
+  border:0
+}
+.toggle{
+  width:18px;
+  height:18px;
+  accent-color:var(--green)
+}
+.empty-state{
+  padding:40px;
+  text-align:center;
+  color:var(--muted)
+}
+@media(min-width:1600px){
+  .portal-main{
+    margin-top:65px
+  }
+}
+@media(max-width:1100px){
+  .sidebar{
+    width:190px;
+    padding:25px 12px
+  }
+  .admin-workspace{
+    margin-left:190px;
+    width:calc(100% - 190px)
+  }
+  .admin-main{
+    padding:26px 22px
+  }
+  .admin-header{
+    padding:0 22px
+  }
+  .metrics{
+    gap:10px
+  }
+  .metric{
+    padding:15px
+  }
+  .overview-grid{
+    grid-template-columns:1fr
+  }
+  .admin-profile>span:last-child{
+    display:none
+  }
+}
+@media(max-width:760px){
+  .sidebar{
+    position:static;
+    width:100%;
+    padding:18px 16px;
+    border-right:0;
+    border-bottom:1px solid var(--line)
+  }
+  .sidebar .brand{
+    font-size:19px
+  }
+  .sidebar-label,.station-card,.sidebar-footer>a{
+    display:none
+  }
+  .sidebar nav{
+    display:flex;
+    overflow:auto;
+    margin-top:18px;
+    gap:5px
+  }
+  .nav-item{
+    width:auto;
+    flex-shrink:0;
+    margin:0;
+    padding:9px 11px;
+    font-size:11px;
+    min-height:38px
+  }
+  .nav-item>span{
+    display:none
+  }
+  .sidebar-footer{
+    position:absolute;
+    right:16px;
+    top:20px
+  }
+  .admin-layout{
+    display:block
+  }
+  .admin-workspace{
+    margin:0;
+    width:100%
+  }
+  .admin-header{
+    height:58px;
+    padding:0 20px
+  }
+  .admin-main{
+    padding:25px 18px
+  }
+  .page-heading{
+    align-items:start
+  }
+  .page-heading h1{
+    font-size:23px
+  }
+  .page-heading>.button{
+    padding:8px;
+    font-size:10px
+  }
+  .page-heading p{
+    font-size:11px
+  }
+  .metrics{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px
+  }
+  .metric-value{
+    font-size:27px
+  }
+  .machine-details{
+    grid-template-columns:1fr
+  }
+  .admin-profile .badge{
+    font-size:9px
+  }
+  .admin-footer{
+    padding:18px
+  }
+  .chart{
+    gap:10px
+  }
+  .form-row{
+    gap:12px
+  }
+  .form-row p{
+    max-width:230px
+  }
+  .site-header{
+    height:74px;
+    padding:0 20px
+  }
+  .site-header .brand{
+    font-size:21px
+  }
+  .station-label{
+    font-size:8px;
+    gap:5px
+  }
+  .portal-main{
+    margin-top:32px
+  }
+  .portal-heading h1{
+    font-size:29px
+  }
+  .portal-footer{
+    margin:0 20px;
+    font-size:10px
+  }
+  .connection-panel{
+    padding:21px
+  }
+  .timer{
+    font-size:62px
+  }
+  .portal-heading .eyebrow{
+    font-size:9px
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  *{
+    transition:none!important
+  }
+}
+
+
+/* Live / Demo mode badge (admin + shared) */
+.mode-badge{
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  padding:.2rem .55rem;border-radius:999px;border:1px solid transparent;
+}
+.mode-badge.demo{background:#f3f4f6;color:#4b5563;border-color:#e5e7eb}
+.mode-badge.live{background:#ecfdf5;color:#047857;border-color:#a7f3d0}
+.admin-profile .mode-badge{margin-right:.35rem}
+
+</style><style>
+body,button,input,select,h1,h2,h3,.brand,.timer,.metric-value {
+  font-family: Arial, Helvetica, sans-serif;
+}
+.brand-mark img { display: block; width: 29px; height: 29px; }
+.impact-icon svg { width: 28px; height: 28px; }
+.wifi-symbol svg { width: 20px; height: 20px; }
+.login-icon svg { width: 26px; height: 26px; }
+.nav-item svg { width: 18px; height: 18px; }
+
+</style><style>
+/* Kiosk home screen: one centred card on a soft green ground. */
+:root{
+  --k-green:#4a9e4f;
+  --k-green-dark:#2f7d38;
+  --k-green-deep:#246b2d;
+  --k-bg:#e7eee8;
+  --k-row:#eef1ef;
+  --k-row-hover:#e5eae6;
+  --k-ink:#2b3330;
+  --k-muted:#6f7a74
+}
+body.kiosk-body{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:24px 16px;
+  background:var(--k-bg);
+  color:var(--k-ink)
+}
+.kiosk-shell{
+  width:100%;
+  max-width:420px;
+  display:flex;
+  flex-direction:column;
+  gap:14px
+}
+.kiosk-card{
+  background:#fff;
+  border-radius:26px;
+  padding:34px 26px 22px;
+  box-shadow:0 18px 44px rgba(31,64,42,.13);
+  text-align:center
+}
+.kiosk-brand{
+  margin-bottom:2px
+}
+.kiosk-logo{
+  width:62px;
+  height:62px;
+  margin:0 auto 18px;
+  border-radius:50%;
+  background:var(--k-green);
+  display:grid;
+  place-items:center
+}
+.kiosk-logo svg{
+  width:34px;
+  height:34px;
+  stroke:#fff;
+  fill:none;
+  stroke-width:2.1;
+  stroke-linecap:round;
+  stroke-linejoin:round
+}
+.kiosk-title{
+  font-size:21px;
+  font-weight:600;
+  line-height:1.1;
+  color:var(--k-green-dark);
+  margin:0
+}
+.status-pill{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  margin:22px 0 0;
+  padding:13px 16px;
+  border-radius:14px;
+  background:var(--k-row);
+  font-size:17px;
+  font-weight:700;
+  color:var(--k-green-deep)
+}
+.status-pill .dot{
+  width:13px;
+  height:13px;
+  border-radius:50%;
+  background:var(--k-green);
+  flex:none
+}
+.status-pill[data-tone="warn"]{
+  color:#8a5a12
+}
+.status-pill[data-tone="warn"] .dot{
+  background:#d59320
+}
+.status-pill[data-tone="down"]{
+  color:#8c3a34
+}
+.status-pill[data-tone="down"] .dot{
+  background:#c0544b
+}
+.kiosk-primary{
+  width:100%;
+  margin:14px 0 0;
+  padding:19px 20px;
+  border:0;
+  border-radius:999px;
+  background:var(--k-green);
+  color:#fff;
+  font-size:19px;
+  font-weight:800;
+  letter-spacing:.5px;
+  box-shadow:0 8px 18px rgba(58,140,66,.28)
+}
+.kiosk-primary:hover:not(:disabled){
+  background:var(--k-green-dark)
+}
+.kiosk-primary:active:not(:disabled){
+  transform:translateY(1px)
+}
+.kiosk-menu{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:18px
+}
+.menu-row{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  width:100%;
+  padding:15px 18px;
+  border:0;
+  border-radius:14px;
+  background:var(--k-row);
+  font-size:16px;
+  font-weight:600;
+  color:var(--k-ink);
+  text-align:left
+}
+.menu-row:hover{
+  background:var(--k-row-hover)
+}
+.menu-row svg{
+  width:21px;
+  height:21px;
+  stroke:var(--k-muted);
+  fill:none;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  flex:none
+}
+.menu-row.admin{
+  border:1px solid #d7e0d9;
+  background:#f4f7f4;
+  color:var(--k-muted)
+}
+/* Session banner shown on the home card while time is running. */
+.session-banner{
+  margin-top:20px;
+  padding:16px;
+  border-radius:16px;
+  background:#eef6f0;
+  border:1px solid #d8e7dd
+}
+.session-banner .timer{
+  font-size:34px;
+  font-weight:800;
+  color:var(--k-green-deep);
+  line-height:1.1;
+  margin:4px 0
+}
+/* Connection pill: state is carried by colour, a label, and a live dot. */
+.conn-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-top:4px;
+  padding:7px 15px 7px 12px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:.2px;
+  border:1px solid transparent;
+  background:#dff0e3;
+  border-color:#b9dcc2;
+  color:var(--k-green-deep)
+}
+.conn-pill .conn-dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  flex:none;
+  background:currentColor;
+  box-shadow:0 0 0 0 currentColor;
+  animation:conn-pulse 2s ease-out infinite
+}
+.conn-pill.off{
+  background:#fbf0dc;
+  border-color:#ecd7a9;
+  color:#8a5a12
+}
+.conn-pill.off .conn-dot{
+  animation:none
+}
+@keyframes conn-pulse{
+  0%{box-shadow:0 0 0 0 rgba(36,107,45,.45)}
+  70%{box-shadow:0 0 0 7px rgba(36,107,45,0)}
+  100%{box-shadow:0 0 0 0 rgba(36,107,45,0)}
+}
+@media (prefers-reduced-motion:reduce){
+  .conn-pill .conn-dot{animation:none}
+}
+/* Deposit view replaces the home card while the hatch is open. */
+.deposit-view{
+  margin-top:20px;
+  text-align:center
+}
+/* Deposit heading sits above the time-remaining box while the hatch is open. */
+.deposit-heading{
+  margin-top:20px;
+  text-align:center
+}
+.deposit-heading h2{
+  margin:0;
+  font-size:22px;
+  font-weight:800;
+  color:var(--k-green-dark)
+}
+.deposit-heading p{
+  margin:6px 0 0;
+  font-size:14px
+}
+.deposit-heading[hidden]{
+  display:none!important
+}
+.deposit-view .feedback{
+  margin:18px 0 0;
+  padding:15px;
+  border-radius:14px;
+  background:var(--k-row);
+  font-size:15px;
+  font-weight:600
+}
+.deposit-view .feedback.error{
+  background:#fbeceb;
+  color:#8c3a34
+}
+.session-stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:14px
+}
+.session-stats div{
+  padding:12px;
+  border-radius:14px;
+  background:var(--k-row);
+  display:flex;
+  flex-direction:column;
+  gap:3px
+}
+.session-stats span{
+  font-size:12px;
+  color:var(--k-muted)
+}
+.session-stats strong{
+  font-size:18px;
+  color:var(--k-green-deep)
+}
+.sheet-rate small{
+  color:var(--k-muted)
+}
+.sheet-rate span{
+  text-align:left
+}
+.text-button{
+  margin-top:16px;
+  padding:12px 18px;
+  border:1px solid #d7e0d9;
+  border-radius:999px;
+  background:#fff;
+  font-size:15px;
+  font-weight:700;
+  color:var(--k-green-dark)
+}
+.text-button:hover:not(:disabled){
+  background:var(--k-row)
+}
+/* Sheets */
+.sheet[hidden]{
+  display:none!important
+}
+.sheet{
+  position:fixed;
+  inset:0;
+  z-index:20;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(28,45,34,.45)
+}
+.sheet-card{
+  width:100%;
+  max-width:400px;
+  max-height:86vh;
+  overflow:auto;
+  background:#fff;
+  border-radius:22px;
+  padding:24px
+}
+.sheet-card h2{
+  font-size:20px;
+  font-weight:800;
+  color:var(--k-green-dark);
+  margin:0 0 12px
+}
+.sheet-card p,.sheet-card li{
+  font-size:15px;
+  line-height:1.5;
+  color:#4a5550
+}
+.sheet-card ul,.sheet-card ol{
+  margin:0;
+  padding-left:20px;
+  display:flex;
+  flex-direction:column;
+  gap:8px
+}
+.sheet-rate{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding:13px 15px;
+  border-radius:13px;
+  background:var(--k-row);
+  font-size:15px;
+  margin-bottom:9px
+}
+.sheet-rate strong{
+  color:var(--k-green-deep)
+}
+.sheet-close{
+  width:100%;
+  margin-top:18px;
+  padding:14px;
+  border:0;
+  border-radius:999px;
+  background:var(--k-green);
+  color:#fff;
+  font-size:16px;
+  font-weight:700
+}
+.sheet-close:hover{
+  background:var(--k-green-dark)
+}
+/* Demo controls stay available but out of the way. */
+.demo-panel{
+  max-width:420px;
+  width:100%;
+  font-size:13px;
+  color:var(--k-muted);
+  background:rgba(255,255,255,.6);
+  border-radius:14px;
+  padding:10px 14px
+}
+.demo-panel summary{
+  cursor:pointer;
+  font-weight:700
+}
+.demo-panel label{
+  display:block;
+  margin:10px 0 4px
+}
+.demo-panel select{
+  width:100%;
+  padding:8px;
+  border:1px solid #d7e0d9;
+  border-radius:10px;
+  background:#fff
+}
+.demo-panel .text-button{
+  margin-top:10px;
+  padding:9px 14px;
+  font-size:13px
+}
+@media (max-width:420px){
+  .kiosk-card{padding:28px 18px 18px}
+  .kiosk-title{font-size:19px}
+  .kiosk-logo{width:54px;height:54px}
+  .kiosk-logo svg{width:30px;height:30px}
+}
+/* Brand header: wordmark flush left, mark flush right. */
+.kiosk-brand-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  text-align:left
+}
+.kiosk-brand-row .kiosk-brand-text{
+  min-width:0
+}
+.kiosk-brand-row .kiosk-logo{
+  margin:0;
+  flex:none
+}
+/* Countdown bar that drains alongside the numeric timer. */
+.timer-track{
+  height:18px;
+  margin:12px 0 14px;
+  border-radius:4px;
+  background:#d8e7dd;
+  overflow:hidden
+}
+.timer-fill{
+  display:block;
+  height:100%;
+  width:100%;
+  border-radius:3px;
+  background:linear-gradient(90deg,var(--k-green),var(--k-green-deep));
+  transition:width 1s linear
+}
+.timer-fill.low{
+  background:linear-gradient(90deg,#e0a33a,#c0544b)
+}
+@media (prefers-reduced-motion:reduce){
+  .timer-fill{transition:none}
+}
+@media (max-width:420px){
+  .kiosk-brand-row{gap:12px}
+}
+/* Report a Problem: banner header, form body, status footer. */
+.report-card{
+  padding:0;
+  overflow:hidden;
+  text-align:left;
+  max-width:380px
+}
+.report-head{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:18px 18px 20px;
+  background:var(--k-green);
+  color:#fff
+}
+.report-head-icon{
+  display:grid;
+  place-items:center;
+  width:34px;
+  height:34px;
+  flex:none;
+  border-radius:10px;
+  background:rgba(255,255,255,.9)
+}
+.report-head-icon svg{
+  width:19px;
+  height:19px;
+  stroke:var(--k-green-dark);
+  fill:none;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round
+}
+.report-head-text{
+  flex:1;
+  min-width:0
+}
+.report-eyebrow{
+  display:block;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1.1px;
+  color:rgba(255,255,255,.85)
+}
+.report-head h2{
+  margin:2px 0 0;
+  font-size:20px;
+  font-weight:800;
+  color:#fff
+}
+.report-x{
+  width:28px;
+  height:28px;
+  flex:none;
+  padding:0;
+  border:0;
+  border-radius:8px;
+  background:transparent;
+  color:#fff;
+  font-size:22px;
+  line-height:1;
+  margin:0
+}
+.report-x:hover{
+  background:rgba(255,255,255,.18)
+}
+.report-body{
+  display:flex;
+  flex-direction:column;
+  padding:20px 18px 18px
+}
+.report-body label,.report-body .field-label{
+  font-size:13px;
+  font-weight:600;
+  color:var(--k-ink);
+  margin-bottom:7px
+}
+.report-body label+.report-field,.report-body .picker{
+  margin-bottom:16px
+}
+.report-field{
+  width:100%;
+  padding:12px 13px;
+  border:1px solid #d7e0d9;
+  border-radius:10px;
+  background:#fff;
+  font-size:14px;
+  color:var(--k-ink);
+  font-family:inherit
+}
+/* Fields signal focus with their own border, never a focus ring. */
+.report-field:focus,.report-field:focus-visible{
+  outline:none;
+  border-color:var(--k-green)
+}
+.report-field.invalid{
+  border-color:#c0544b;
+  background:#fdf6f5
+}
+textarea.report-field{
+  resize:vertical;
+  min-height:76px
+}
+.report-status{
+  margin:0;
+  font-size:13px;
+  font-weight:600;
+  color:var(--k-green-deep);
+  min-height:19px
+}
+.report-status.error{
+  color:#8c3a34
+}
+.report-submit{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  width:100%;
+  margin-top:10px;
+  padding:14px;
+  border:0;
+  border-radius:999px;
+  background:var(--k-green);
+  color:#fff;
+  font-size:14px;
+  font-weight:800;
+  letter-spacing:.6px
+}
+.report-submit:hover:not(:disabled){
+  background:var(--k-green-dark)
+}
+.report-submit:disabled{
+  opacity:.6
+}
+.report-submit svg{
+  width:16px;
+  height:16px;
+  stroke:currentColor;
+  fill:none;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round
+}
+.report-foot{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px 18px;
+  border-top:1px solid #eceff0;
+  background:#f7faf8
+}
+.report-ready{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1px;
+  color:var(--k-muted)
+}
+.report-ready .dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--k-green);
+  flex:none
+}
+.report-ready[data-tone="warn"] .dot{
+  background:#d59320
+}
+.report-ready[data-tone="down"] .dot{
+  background:#c0544b
+}
+.report-close{
+  width:auto;
+  margin:0;
+  padding:10px 22px;
+  border:0;
+  border-radius:999px;
+  background:var(--k-green);
+  color:#fff;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.8px
+}
+.report-close:hover{
+  background:var(--k-green-dark)
+}
+/* Custom problem-type dropdown: a button plus its own listbox. */
+.picker{
+  position:relative
+}
+.picker-button{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  text-align:left;
+  cursor:pointer
+}
+.picker-button.open{
+  border-color:var(--k-green)
+}
+.picker-button.invalid{
+  border-color:#c0544b;
+  background:#fdf6f5
+}
+.picker-value{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap
+}
+.picker-value.is-placeholder{
+  color:#9aa5a0
+}
+.picker-caret{
+  display:grid;
+  place-items:center;
+  flex:none;
+  transition:transform .18s ease
+}
+.picker-button.open .picker-caret{
+  transform:rotate(180deg)
+}
+.picker-caret svg{
+  width:17px;
+  height:17px;
+  stroke:var(--k-green-dark);
+  fill:none;
+  stroke-width:2.2;
+  stroke-linecap:round;
+  stroke-linejoin:round
+}
+.picker-list{
+  position:absolute;
+  top:calc(100% + 6px);
+  left:0;
+  right:0;
+  z-index:5;
+  margin:0;
+  padding:6px;
+  list-style:none;
+  border:1px solid #d7e0d9;
+  border-radius:12px;
+  background:#fff;
+  box-shadow:0 16px 32px rgba(31,64,42,.16);
+  max-height:232px;
+  overflow:auto
+}
+.picker-list[hidden]{
+  display:none!important
+}
+.picker-option{
+  padding:11px 12px;
+  border-radius:8px;
+  font-size:14px;
+  color:var(--k-ink);
+  cursor:pointer;
+  outline:none
+}
+.picker-option+.picker-option{
+  margin-top:2px
+}
+.picker-option:hover,.picker-option:focus{
+  background:var(--k-row)
+}
+.picker-option[aria-selected="true"]{
+  background:var(--k-green);
+  color:#fff;
+  font-weight:600
+}
+.picker-option[aria-selected="true"]:hover,.picker-option[aria-selected="true"]:focus{
+  background:var(--k-green-dark)
+}
+@media (prefers-reduced-motion:reduce){
+  .picker-caret{transition:none}
+}
+/* The generic .sheet-card typography must not reach the report form. */
+.sheet-card .picker-list{
+  display:block;
+  padding:6px;
+  gap:0
+}
+.sheet-card .picker-option{
+  font-size:14px;
+  line-height:1.4;
+  color:var(--k-ink)
+}
+.sheet-card .picker-option[aria-selected="true"]{
+  color:#fff
+}
+.sheet-card .report-status{
+  font-size:13px;
+  line-height:1.4;
+  color:var(--k-green-deep)
+}
+.sheet-card .report-status.error{
+  color:#8c3a34
+}
+
+/* Live vs Demo mode badge */
+.status-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap
+}
+.mode-badge{
+  display:inline-flex;
+  align-items:center;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.04em;
+  text-transform:uppercase
+}
+.mode-badge.demo{
+  background:#eef1ef;
+  color:#5f6b66
+}
+.mode-badge.live{
+  background:#d8f3e4;
+  color:#0f6b45
+}
+.live-meta{
+  margin:8px 0 0;
+  text-align:center;
+  font-size:12px
+}
+.preview-live-note{
+  margin:10px 0 0;
+  padding:8px 10px;
+  border-radius:10px;
+  background:#fff6e8;
+  color:#8a5a12;
+  font-size:12px;
+  font-weight:600
+}
+.demo-panel.is-live{
+  opacity:.85
+}
+.demo-panel.is-live select,
+.demo-panel.is-live .text-button{
+  pointer-events:none
+}
+
+</style>
+  <script>
+/* Shared mock state. Network authorization belongs in a real backend/router integration. */
+(() => {
+    const KEY = 'bottlenet-demo-v1';
+    const API_KEY = 'bottlenet-api-base';
+    const DEFAULT_API = 'http://192.168.4.1';
+    const SIZES = { large: { label: '1L bottle', short: '1L', minutes: 10, minWeight: 24, maxWeight: 45 }, mismo: { label: 'Mismo size', short: 'Mismo', minutes: 7, minWeight: 17, maxWeight: 24 }, sakto: { label: 'Sakto size', short: 'Sakto', minutes: 5, minWeight: 10, maxWeight: 17 } };
+    const seed = () => ({ rate: 10, sizes: JSON.parse(JSON.stringify(SIZES)), minWeight: 10, maxWeight: 70, bin: 64, station: 'ready', bottles: 128, sessionBottles: 2, lastReward: 10, expiresAt: Date.now() + 1122000, sessionTotal: 1122000, depositOwner: null, depositUntil: 0, transactions: Array.from({ length: 8 }, (_, i) => { const weight = [18.4, 12.1, 7.3, 24.8, 16.2, 32.4, 11.8, 20.5][i], accepted = i !== 2, key = Object.keys(SIZES).find(k => weight >= SIZES[k].minWeight && weight < SIZES[k].maxWeight) || null; return { id: `BN-${1048 - i}`, time: Date.now() - i * 240000, session: i === 0 ? 'Your device' : `Device ${i + 1}`, weight, accepted, size: accepted ? key : null, minutes: accepted && key ? SIZES[key].minutes : 0 }; }), sessions: Array.from({ length: 7 }, (_, i) => ({ id: `device-${i + 2}`, name: `Device ${i + 2}`, expiresAt: Date.now() + (i + 1) * 360000, bottles: i + 1 })), collections: [48, 72, 59, 91, 84, 112, 128], armed: true, sensors: { lid: 'ok', tamper: 'ok', door: 'ok', weight: 'ok', power: 'ok' }, notify: { email: true, sms: false, siren: true }, alarms: [ { id: 'AL-2041', time: Date.now() - 420000, type: 'bin_opened', level: 'critical', ack: false }, { id: 'AL-2040', time: Date.now() - 5400000, type: 'door_open', level: 'warning', ack: false }, { id: 'AL-2039', time: Date.now() - 27000000, type: 'tamper', level: 'critical', ack: true }, { id: 'AL-2038', time: Date.now() - 79200000, type: 'power', level: 'warning', ack: true } ], mode: 'demo', stationId: 'BN-001', stationName: 'Campus station 01', trashLevel: 'NOT FULL', trashDistanceCm: 0, lastBottle: 'None', lastWeightG: 0, lastResult: 'Waiting', lastResultKind: 'waiting', deviceOnline: false });
+    let fallback;
+    function migrate(data) { const base = seed(); for (const key in base) if (!(key in data)) data[key] = base[key]; return data; }
+    function get() { try {
+        const raw = localStorage.getItem(KEY);
+        if (raw)
+            return migrate(JSON.parse(raw));
+    }
+    catch { } return fallback || reset(); }
+    function save(data) { fallback = data; try {
+        localStorage.setItem(KEY, JSON.stringify(data));
+    }
+    catch { } window.dispatchEvent(new Event('bottlenet-change')); return data; }
+    function reset() { return save(seed()); }
+    function update(fn) { const data = get(); fn(data); return save(data); }
+    function time(ms) { const seconds = Math.max(0, Math.ceil(ms / 1000)); return `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`; }
+    function sizeFor(weight) { const list = Object.entries(get().sizes); const hit = list.find(([, v]) => weight >= v.minWeight && weight < v.maxWeight); return hit ? hit[0] : null; }
+    function getApiBase() {
+        try {
+            const q = new URLSearchParams(location.search).get('api');
+            if (q && q.trim())
+                return q.trim().replace(/\/$/, '');
+        }
+        catch { }
+        try {
+            const stored = localStorage.getItem(API_KEY);
+            if (stored && stored.trim())
+                return stored.trim().replace(/\/$/, '');
+        }
+        catch { }
+        return DEFAULT_API;
+    }
+    function setApiBase(url) {
+        const next = String(url || DEFAULT_API).trim().replace(/\/$/, '') || DEFAULT_API;
+        try {
+            localStorage.setItem(API_KEY, next);
+        }
+        catch { }
+        window.dispatchEvent(new CustomEvent('bottlenet-api-base', { detail: { base: next } }));
+        return next;
+    }
+    window.BottleNet = { get, save, reset, update, time, sizeFor, SIZES, getApiBase, setApiBase };
+})();
+
+</script><script>
+/* Live SoftAP adapter with Demo mock fallback. */
+(() => {
+    const DEFAULT_BASE = 'http://192.168.4.1';
+    const POLL_MS = 1000;
+    const HEALTH_TIMEOUT_MS = 1500;
+    const STATUS_TIMEOUT_MS = 1800;
+
+    const params = (() => {
+        try { return new URLSearchParams(location.search); }
+        catch { return new URLSearchParams(); }
+    })();
+
+    let baseUrl = DEFAULT_BASE;
+    try {
+        const q = params.get('api');
+        if (q && q.trim()) baseUrl = q.trim().replace(/\/$/, '');
+        else if (window.BottleNet && typeof window.BottleNet.getApiBase === 'function')
+            baseUrl = window.BottleNet.getApiBase();
+    } catch { }
+
+    const requested = (params.get('mode') || 'auto').toLowerCase();
+    let mode = ['auto', 'live', 'demo'].includes(requested) ? requested : 'auto';
+    let live = false;
+    let pollTimer = null;
+    let lastSeenKey = null;
+    let started = false;
+
+    function isLive() { return live; }
+
+    function binFromTrash(level) {
+        const t = String(level || '').toUpperCase();
+        if (t === 'FULL') return 95;
+        if (t === 'HALF FULL' || t === 'HALF') return 65;
+        return 20;
+    }
+
+    function sizeKeyFromBottle(name) {
+        const n = String(name || '').toUpperCase();
+        if (n.includes('1L') || n.includes('COKE 1')) return 'large';
+        if (n.includes('MISMO')) return 'mismo';
+        if (n.includes('SAKTO')) return 'sakto';
+        return null;
+    }
+
+    function minutesForBottle(name, rates, store) {
+        const key = sizeKeyFromBottle(name);
+        if (rates) {
+            if (key === 'large' && rates.coke1l != null) return Number(rates.coke1l) || 0;
+            if (key === 'mismo' && rates.mismo != null) return Number(rates.mismo) || 0;
+            if (key === 'sakto' && rates.sakto != null) return Number(rates.sakto) || 0;
+        }
+        if (key && store.sizes && store.sizes[key]) return Number(store.sizes[key].minutes) || 0;
+        return 0;
+    }
+
+    function setLive(next) {
+        if (live === next) return;
+        live = next;
+        try {
+            window.BottleNet.update(s => { s.mode = next ? 'live' : 'demo'; s.deviceOnline = next; });
+        } catch { }
+        window.dispatchEvent(new CustomEvent('bottlenet-mode', { detail: { mode: next ? 'live' : 'demo', live: next } }));
+        updateBadges();
+    }
+
+    function updateBadges() {
+        document.querySelectorAll('[data-bn-mode-badge], #mode-badge').forEach(el => {
+            el.textContent = live ? 'Live' : 'Demo';
+            el.dataset.tone = live ? 'live' : 'demo';
+            el.classList.toggle('live', live);
+            el.classList.toggle('demo', !live);
+            if (el.classList.contains('mode-badge') || el.id === 'mode-badge')
+                el.className = `mode-badge ${live ? 'live' : 'demo'}`;
+            el.setAttribute('title', live ? 'Polling SoftAP /api/status' : 'Using mock station data');
+        });
+        const ws = document.getElementById('workspace-badge');
+        if (ws) {
+            ws.textContent = live ? 'Live workspace' : 'Demo workspace';
+            ws.className = live ? 'badge green' : 'badge';
+        }
+        document.querySelectorAll('[data-bn-live-only]').forEach(el => {
+            el.hidden = !live;
+        });
+        document.querySelectorAll('[data-bn-demo-only]').forEach(el => {
+            el.hidden = live;
+            if ('disabled' in el) el.disabled = live;
+        });
+        document.querySelectorAll('.demo-panel').forEach(panel => {
+            if (live) {
+                panel.setAttribute('data-live-locked', '1');
+                panel.querySelectorAll('select, button, input').forEach(ctrl => { ctrl.disabled = true; });
+                let note = panel.querySelector('[data-bn-live-note]');
+                if (!note) {
+                    note = document.createElement('p');
+                    note.dataset.bnLiveNote = '1';
+                    note.className = 'muted';
+                    panel.appendChild(note);
+                }
+                note.textContent = 'Live device connected — Preview controls are disabled. Disconnect from PlasticBottle_WiFi or use ?mode=demo to simulate.';
+            } else {
+                panel.removeAttribute('data-live-locked');
+                panel.querySelectorAll('select, button, input').forEach(ctrl => { ctrl.disabled = false; });
+                const note = panel.querySelector('[data-bn-live-note]');
+                if (note) note.remove();
+            }
+        });
+    }
+
+    async function fetchJson(path, timeoutMs) {
+        const ctrl = new AbortController();
+        const kill = setTimeout(() => ctrl.abort(), timeoutMs);
+        try {
+            const res = await fetch(baseUrl.replace(/\/$/, '') + path, {
+                signal: ctrl.signal,
+                cache: 'no-store',
+                headers: { Accept: 'application/json' }
+            });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return await res.json();
+        } finally {
+            clearTimeout(kill);
+        }
+    }
+
+    async function checkHealth() {
+        const data = await fetchJson('/api/health', HEALTH_TIMEOUT_MS);
+        return data && data.ok === true;
+    }
+
+    function applyStatus(status) {
+        const store = window.BottleNet;
+        const rem = Math.max(0, Number(status.wifiRemainingMs) || 0);
+        const result = String(status.lastResult || 'Waiting');
+        const bottle = status.lastBottle != null ? String(status.lastBottle) : 'None';
+        const weight = Number(status.lastWeightG) || 0;
+        const key = `${bottle}|${weight}|${result}`;
+        const isDecision = result === 'ACCEPTED' || result === 'REJECTED';
+
+        store.update(s => {
+            s.mode = 'live';
+            s.deviceOnline = status.online !== false;
+            s.stationId = status.stationId || s.stationId || 'BN-001';
+            s.stationName = status.stationName || s.stationName || 'Campus station 01';
+            s.trashLevel = status.trashLevel || s.trashLevel;
+            s.trashDistanceCm = Number(status.trashDistanceCm) || 0;
+            s.lastBottle = bottle;
+            s.lastWeightG = weight;
+            s.lastResult = result;
+            s.bin = binFromTrash(status.trashLevel);
+            s.expiresAt = Date.now() + rem;
+            if (rem > 0) s.sessionTotal = Math.max(Number(s.sessionTotal) || 0, rem);
+
+            if (status.online === false) s.station = 'offline';
+            else if (String(status.trashLevel || '').toUpperCase() === 'FULL') s.station = 'full';
+            else if (s.station === 'offline' || s.station === 'full') s.station = 'ready';
+
+            if (status.rates) {
+                if (status.rates.coke1l != null && s.sizes.large) s.sizes.large.minutes = Number(status.rates.coke1l) || s.sizes.large.minutes;
+                if (status.rates.mismo != null && s.sizes.mismo) s.sizes.mismo.minutes = Number(status.rates.mismo) || s.sizes.mismo.minutes;
+                if (status.rates.sakto != null && s.sizes.sakto) s.sizes.sakto.minutes = Number(status.rates.sakto) || s.sizes.sakto.minutes;
+                s.rate = s.sizes.large ? s.sizes.large.minutes : s.rate;
+            }
+
+            if (isDecision && key !== lastSeenKey) {
+                const sizeKey = sizeKeyFromBottle(bottle);
+                const minutes = result === 'ACCEPTED' ? minutesForBottle(bottle, status.rates, s) : 0;
+                const accepted = result === 'ACCEPTED';
+                s.transactions.unshift({
+                    id: `BN-${Date.now()}`,
+                    time: Date.now(),
+                    session: 'Station SoftAP',
+                    weight,
+                    accepted,
+                    minutes,
+                    size: accepted ? sizeKey : null
+                });
+                if (accepted) {
+                    s.lastReward = minutes || Number(status.wifiMinutesAwarded) || s.lastReward;
+                    s.sessionBottles = (Number(s.sessionBottles) || 0) + 1;
+                    s.bottles = (Number(s.bottles) || 0) + 1;
+                    if (Array.isArray(s.collections) && s.collections.length)
+                        s.collections[s.collections.length - 1] = s.bottles;
+                } else {
+                    s.lastReward = 0;
+                }
+            } else if (!isDecision && Number(status.wifiMinutesAwarded) > 0) {
+                /* keep lastReward from prior accept */
+            }
+        });
+
+        if (isDecision) lastSeenKey = key;
+    }
+
+    async function pollStatus() {
+        if (mode === 'demo') {
+            setLive(false);
+            return null;
+        }
+        try {
+            if (mode === 'auto' && !live) {
+                const ok = await checkHealth();
+                if (!ok) {
+                    setLive(false);
+                    return null;
+                }
+            } else if (mode === 'live' && !live) {
+                await checkHealth();
+            }
+            const status = await fetchJson('/api/status', STATUS_TIMEOUT_MS);
+            setLive(true);
+            applyStatus(status);
+            return status;
+        } catch {
+            if (mode === 'live') {
+                /* stay marked live-attempt but fall UI to demo data */
+            }
+            setLive(false);
+            return null;
+        }
+    }
+
+    function schedule() {
+        clearTimeout(pollTimer);
+        pollTimer = setTimeout(async () => {
+            await pollStatus();
+            schedule();
+        }, POLL_MS);
+    }
+
+    function start() {
+        if (started) return;
+        started = true;
+        updateBadges();
+        window.addEventListener('bottlenet-mode', updateBadges);
+        pollStatus().finally(schedule);
+    }
+
+    function setMode(next) {
+        const m = String(next || 'auto').toLowerCase();
+        if (!['auto', 'live', 'demo'].includes(m)) return mode;
+        mode = m;
+        if (m === 'demo') setLive(false);
+        pollStatus();
+        return mode;
+    }
+
+    function ensureBadge(selector, attrs) {
+        const host = typeof selector === 'string' ? document.querySelector(selector) : selector;
+        if (!host) return null;
+        let badge = host.querySelector('[data-bn-mode-badge]');
+        if (!badge) {
+            badge = document.createElement('span');
+            badge.className = 'badge bn-mode-badge';
+            badge.dataset.bnModeBadge = '1';
+            if (attrs && attrs.prepend) host.prepend(badge);
+            else host.appendChild(badge);
+        }
+        updateBadges();
+        return badge;
+    }
+
+    window.BottleNetDevice = {
+        baseUrl,
+        get mode() { return mode; },
+        set mode(v) { return setMode(v); },
+        pollStatus,
+        isLive,
+        start,
+        ensureBadge,
+        updateBadges
+    };
+
+    /* Bridge for portal.js / admin.js which call store.isLive() */
+    if (window.BottleNet) {
+        window.BottleNet.isLive = isLive;
+        window.BottleNet.getMode = () => (live ? 'live' : 'demo');
+        window.BottleNet.startDevicePoll = start;
+    }
+
+    if (document.readyState === 'loading')
+        document.addEventListener('DOMContentLoaded', start);
+    else
+        start();
+})();
+
+</script><script>
+(() => {
+    const $ = id => document.getElementById(id), store = window.BottleNet;
+    const owner = `portal-${Math.random().toString(36).slice(2)}`;
+    let depositing = false, processing = false, message = '', messageUntil = 0, pendingDeposit;
+    const statusLabels = { ready: 'Machine Ready', busy: 'Station Busy', full: 'Bin Full', maintenance: 'Under Maintenance', offline: 'Machine Offline' };
+    const labels = { ready: 'Station ready for your next bottle', busy: 'Another deposit is in progress. Please wait.', full: 'Bin full. Deposits are temporarily unavailable.', maintenance: 'Station under maintenance. Please check back soon.', offline: 'Station offline. Please check back soon.' };
+    function live() { return typeof store.isLive === 'function' ? store.isLive() : (window.BottleNetDevice && typeof window.BottleNetDevice.isLive === 'function' ? window.BottleNetDevice.isLive() : store.get().mode === 'live'); }
+    function syncModeUi() {
+        const on = live();
+        const badge = $('mode-badge');
+        if (badge) {
+            badge.textContent = on ? 'Live' : 'Demo';
+            badge.className = `mode-badge ${on ? 'live' : 'demo'}`;
+            badge.title = on ? 'Connected to SoftAP device' : 'Using sample demo data';
+        }
+        const note = $('preview-live-note');
+        if (note)
+            note.hidden = !on;
+        const summary = $('preview-summary');
+        if (summary)
+            summary.textContent = on ? 'Preview controls (Demo only)' : 'Preview controls';
+        const panel = document.querySelector('.demo-panel');
+        if (panel)
+            panel.classList.toggle('is-live', on);
+    }
+    function render() {
+        const d = store.get(), active = d.expiresAt > Date.now(), locked = d.depositUntil > Date.now() && d.depositOwner !== owner;
+        const on = live();
+        syncModeUi();
+        if (depositing && (d.depositUntil <= Date.now() || d.station !== 'ready')) {
+            depositing = false;
+            processing = false;
+        }
+        const remaining = Math.max(0, d.expiresAt - Date.now()), total = Math.max(1, d.sessionTotal || remaining);
+        $('timer').textContent = store.time(remaining);
+        const percent = Math.max(0, Math.min(100, remaining / total * 100));
+        $('timer-fill').style.width = percent + '%';
+        $('timer-fill').parentElement.setAttribute('aria-valuenow', Math.round(percent));
+        $('timer-fill').classList.toggle('low', active && remaining <= 60000);
+        $('connection-label').textContent = active ? 'Connected' : 'Time expired';
+        $('connection-badge').className = `conn-pill ${active ? 'on' : 'off'}`;
+        $('session-bottles').textContent = d.sessionBottles;
+        $('last-reward').textContent = `+${d.lastReward} min`;
+        $('deposit-button').hidden = depositing;
+        $('deposit-controls').hidden = !depositing;
+        $('deposit-button').disabled = d.station !== 'ready' || locked;
+        $('deposit-label').textContent = locked ? 'STATION BUSY' : active ? 'ADD MORE TIME' : 'INSERT BOTTLE';
+        $('home-view').hidden = depositing;
+        $('deposit-view').hidden = !depositing;
+        $('session-banner').hidden = !active;
+        $('status-text').textContent = locked ? 'Station Busy' : statusLabels[d.station];
+        $('status-pill').dataset.tone = locked || d.station === 'busy' || d.station === 'full' ? 'warn' : d.station === 'ready' ? 'ok' : 'down';
+        $('preview-state').disabled = processing || on;
+        $('reset-demo').disabled = processing || on;
+        let feedback = messageUntil > Date.now() ? message : depositing ? 'Deposit window open. Insert your bottle.' : locked ? labels.busy : labels[d.station];
+        if (on && !depositing && messageUntil <= Date.now()) {
+            const bottle = d.lastBottle && d.lastBottle !== 'None' ? d.lastBottle : '—';
+            const weight = d.lastWeightG != null ? `${d.lastWeightG} g` : '—';
+            const result = d.lastResult || 'Waiting';
+            feedback = `${result} · Last bottle ${bottle} · ${weight}`;
+        }
+        $('deposit-feedback').textContent = feedback;
+        $('deposit-feedback').classList.toggle('error', feedback.startsWith('Bottle rejected') || (on && String(d.lastResultKind || '').includes('reject')));
+        const liveMeta = $('live-meta');
+        if (liveMeta) {
+            liveMeta.hidden = !on;
+            if (on) {
+                const bottle = d.lastBottle && d.lastBottle !== 'None' ? d.lastBottle : 'None';
+                liveMeta.textContent = `${d.stationName || 'Station'} · ${d.lastResult || 'Waiting'} · ${bottle} · ${d.lastWeightG || 0} g · bin ${d.bin}%${d.trashLevel ? ` · ${d.trashLevel}` : ''}`;
+            }
+        }
+    }
+    function notify(text) { message = text; messageUntil = Date.now() + 6000; render(); }
+    $('deposit-button').addEventListener('click', () => { const d = store.get(); if (d.station !== 'ready' || d.depositUntil > Date.now() && d.depositOwner !== owner)
+        return; depositing = true; messageUntil = 0; store.update(s => { s.depositOwner = owner; s.depositUntil = Date.now() + 60000; }); render(); });
+    function deposit(accepted, sizeKey) {
+        if (processing || !depositing || live())
+            return;
+        processing = true;
+        notify('Checking bottle...');
+        pendingDeposit = setTimeout(() => {
+            const d = store.get();
+            if (d.station !== 'ready' || d.depositOwner !== owner || d.depositUntil <= Date.now()) {
+                processing = false;
+                depositing = false;
+                notify('Deposit interrupted. No time was awarded.');
+                return;
+            }
+            const keys = Object.keys(d.sizes), key = sizeKey && d.sizes[sizeKey] ? sizeKey : keys[Math.floor(Math.random() * keys.length)], size = d.sizes[key];
+            const weight = accepted ? Math.round((size.minWeight + size.maxWeight) * 5) / 10 : Math.max(0, d.minWeight - 2.7);
+            const minutes = accepted ? size.minutes : 0;
+            store.update(s => {
+                s.transactions.unshift({ id: `BN-${Date.now()}`, time: Date.now(), session: 'Your device', weight, accepted, minutes, size: accepted ? key : null });
+                if (accepted) {
+                    s.bottles++;
+                    s.sessionBottles++;
+                    s.lastReward = minutes;
+                    s.expiresAt = Math.max(Date.now(), s.expiresAt) + minutes * 60000;
+                    s.sessionTotal = s.expiresAt - Date.now();
+                    s.bin = Math.min(100, s.bin + 1);
+                    s.collections[6] = s.bottles;
+                    if (s.bin === 100)
+                        s.station = 'full';
+                }
+                s.depositUntil = Date.now() + 60000;
+            });
+            processing = false;
+            notify(accepted ? `${size.label} accepted. +${minutes} minutes added.` : 'Bottle rejected. Weight is outside the accepted range.');
+        }, 900);
+    }
+    $('finish-deposit').onclick = () => { depositing = false; store.update(d => { d.depositUntil = 0; d.depositOwner = null; }); notify('All set. Enjoy your connection.'); };
+    $('preview-state').onchange = e => {
+        if (live()) {
+            e.target.value = store.get().station;
+            notify('Preview is demo-only while Live.');
+            return;
+        }
+        const [state, sizeKey] = e.target.value.split(':');
+        if (state === 'accepted' || state === 'rejected') {
+            const d = store.get();
+            if (!depositing && d.station === 'ready') $('deposit-button').click();
+            if (depositing) deposit(state === 'accepted', sizeKey);
+            else notify('Station unavailable. Choose Ready before previewing a bottle.');
+            e.target.value = d.station;
+            return;
+        }
+        clearTimeout(pendingDeposit);
+        processing = false;
+        depositing = false; messageUntil = 0; store.update(d => { d.depositUntil = 0; d.depositOwner = null; if (state === 'expired') {
+        d.expiresAt = Date.now();
+        d.sessionTotal = 0;
+        d.station = 'ready';
+    }
+    else
+        d.station = state; }); render(); };
+    $('reset-demo').onclick = () => {
+        if (live()) {
+            notify('Reset demo is available in Demo mode only.');
+            return;
+        }
+        depositing = false; messageUntil = 0; store.reset(); $('preview-state').value = 'ready'; render();
+    };
+    window.addEventListener('storage', render);
+    window.addEventListener('bottlenet-change', render);
+    window.addEventListener('bottlenet-mode', render);
+    setInterval(render, 1000);
+    render();
+})();
+
+</script><script>
+/* Kiosk home screen: informational sheets for the menu rows. */
+(() => {
+    const $ = id => document.getElementById(id), store = window.BottleNet;
+    const sheets = { rates: $('sheet-rates'), help: $('sheet-help'), report: $('sheet-report') };
+    let lastFocus = null;
+    function fillRates() {
+        const sizes = store.get().sizes;
+        Object.entries(sizes).forEach(([key, size]) => {
+            $('rate-' + key).textContent = size.minutes + ' minutes';
+            $('weight-' + key).textContent = size.minWeight + '–' + size.maxWeight + ' g';
+        });
+    }
+    function open(name) {
+        const sheet = sheets[name];
+        if (!sheet) return;
+        if (name === 'rates') fillRates();
+        if (name === 'report') resetReport();
+        lastFocus = document.activeElement;
+        sheet.hidden = false;
+        (name === 'report' ? $('report-type-button') : sheet.querySelector('.sheet-close')).focus();
+    }
+    /* Report form: demo only, the report is acknowledged locally. */
+    let reportTimer, reportType = '';
+    const options = [...document.querySelectorAll('#report-type-list .picker-option')];
+    function clearReportError() {
+        $('report-type-button').classList.remove('invalid');
+        $('report-status').textContent = '';
+        $('report-status').classList.remove('error');
+    }
+    function setType(value) {
+        reportType = value;
+        const label = $('report-type-value');
+        label.textContent = value || 'Select a problem';
+        label.classList.toggle('is-placeholder', !value);
+        options.forEach(o => o.setAttribute('aria-selected', String(o.dataset.value === value)));
+        if (value) clearReportError();
+    }
+    function openPicker(show) {
+        const list = $('report-type-list'), button = $('report-type-button');
+        list.hidden = !show;
+        button.setAttribute('aria-expanded', String(show));
+        button.classList.toggle('open', show);
+        if (show) (options.find(o => o.dataset.value === reportType) || options[0]).focus();
+    }
+    const pickerOpen = () => !$('report-type-list').hidden;
+    options.forEach(option => {
+        option.tabIndex = -1;
+        option.addEventListener('click', () => { setType(option.dataset.value); openPicker(false); $('report-type-button').focus(); });
+        option.addEventListener('keydown', e => {
+            const i = options.indexOf(option);
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); option.click(); }
+            else if (e.key === 'ArrowDown') { e.preventDefault(); options[(i + 1) % options.length].focus(); }
+            else if (e.key === 'ArrowUp') { e.preventDefault(); options[(i - 1 + options.length) % options.length].focus(); }
+            else if (e.key === 'Escape') { e.stopPropagation(); openPicker(false); $('report-type-button').focus(); }
+            else if (e.key === 'Tab') openPicker(false);
+        });
+    });
+    $('report-type-button').addEventListener('click', () => openPicker(!pickerOpen()));
+    $('report-type-button').addEventListener('keydown', e => {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); openPicker(true); }
+        else if (e.key === 'Escape' && pickerOpen()) { e.stopPropagation(); openPicker(false); }
+    });
+    document.addEventListener('click', e => { if (pickerOpen() && !$('report-type-picker').contains(e.target)) openPicker(false); });
+    function resetReport() {
+        clearTimeout(reportTimer);
+        $('report-form').reset();
+        openPicker(false);
+        setType('');
+        clearReportError();
+        $('report-form').querySelector('.report-submit').disabled = false;
+    }
+    function stationTone() {
+        const station = store.get().station;
+        const label = { ready: 'SYSTEM READY', busy: 'STATION BUSY', full: 'BIN FULL', maintenance: 'MAINTENANCE', offline: 'SYSTEM OFFLINE' }[station] || 'SYSTEM READY';
+        const tone = station === 'ready' ? 'ok' : station === 'offline' || station === 'maintenance' ? 'down' : 'warn';
+        const ready = $('report-ready');
+        ready.lastChild.textContent = label;
+        ready.dataset.tone = tone;
+    }
+    $('report-form').addEventListener('submit', e => {
+        e.preventDefault();
+        const status = $('report-status');
+        if (!reportType) {
+            $('report-type-button').classList.add('invalid');
+            status.textContent = 'Choose a problem type first.';
+            status.classList.add('error');
+            $('report-type-button').focus();
+            return;
+        }
+        status.classList.remove('error');
+        status.textContent = 'Report sent. Station staff have been notified.';
+        e.target.querySelector('.report-submit').disabled = true;
+        reportTimer = setTimeout(closeAll, 1800);
+    });
+
+    function closeAll() {
+        clearTimeout(reportTimer);
+        openPicker(false);
+        Object.values(sheets).forEach(sheet => { sheet.hidden = true; });
+        if (lastFocus) lastFocus.focus();
+    }
+    document.querySelectorAll('[data-sheet]').forEach(el => el.addEventListener('click', () => open(el.dataset.sheet)));
+    document.querySelectorAll('.sheet-close').forEach(el => el.addEventListener('click', closeAll));
+    Object.values(sheets).forEach(sheet => sheet.addEventListener('click', e => { if (e.target === sheet) closeAll(); }));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAll(); });
+    window.addEventListener('bottlenet-change', () => { if (!sheets.rates.hidden) fillRates(); stationTone(); });
+    stationTone();
+})();
+
+</script>
+  <script async src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" onload="window.dispatchEvent(new Event('icons-ready'))"></script><script>
+/* Use the same icon vocabulary across both entry points. */
+(() => {
+    const logoUrl = new URL('../images/bottlenet-mark.svg', document.currentScript.src).href;
+    document.querySelectorAll('.brand-mark').forEach(el => {
+        const logo = document.createElement('img');
+        logo.src = logoUrl;
+        logo.alt = '';
+        logo.width = 29;
+        logo.height = 29;
+        el.replaceChildren(logo);
+        el.setAttribute('aria-hidden', 'true');
+    });
+    const apply = () => {
+        if (!window.lucide)
+            return;
+        document.querySelectorAll('.impact-icon,.wifi-symbol,.login-icon').forEach(el => {
+            if (el.querySelector('svg'))
+                return;
+            const name = el.classList.contains('wifi-symbol') ? 'wifi' : el.classList.contains('login-icon') ? 'lock-keyhole' : 'recycle';
+            el.innerHTML = `<i data-lucide="${name}"></i>`;
+        });
+        const names = { overview: 'layout-dashboard', transactions: 'arrow-left-right', sessions: 'wifi', machine: 'cpu', security: 'shield-alert', settings: 'settings' };
+        document.querySelectorAll('[data-tab] > span:first-child').forEach(el => { if (!el.querySelector('svg'))
+            el.innerHTML = `<i data-lucide="${names[el.parentElement.dataset.tab]}"></i>`; });
+        window.lucide.createIcons();
+    };
+    window.addEventListener('icons-ready', apply);
+    apply();
+})();
+
+</script>
+</head>
+<body class="kiosk-body">
+  <main class="kiosk-shell">
+    <section class="kiosk-card">
+      <div class="kiosk-brand">
+        <div class="kiosk-brand-row">
+          <div class="kiosk-brand-text">
+            <h1 class="kiosk-title">BottleNet</h1>
+          </div>
+          <div class="kiosk-logo" aria-hidden="true"><i data-lucide="recycle"></i></div>
+        </div>
+      </div>
+
+      <div id="deposit-heading" class="deposit-heading">
+        <h2>Insert your bottle</h2>
+        <p class="muted">Clean, empty PET bottles only. One bottle at a time.</p>
+      </div>
+
+      <div id="session-banner" class="session-banner" hidden>
+        <span class="eyebrow">YOUR TIME REMAINING</span>
+        <div id="timer" class="timer">--:--</div>
+        <div class="timer-track" role="progressbar" aria-labelledby="timer" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><div id="timer-fill" class="timer-fill"></div></div>
+        <span id="connection-badge" class="conn-pill"><span class="conn-dot" aria-hidden="true"></span><span id="connection-label">Connected</span></span>
+      </div>
+
+      <div id="home-view">
+        <div class="status-row"><div id="status-pill" class="status-pill"><span class="dot"></span><span id="status-text">Machine Ready</span></div><span id="mode-badge" class="mode-badge demo" title="Using sample demo data">Demo</span></div><p id="live-meta" class="live-meta muted" hidden></p>
+        <button id="deposit-button" class="kiosk-primary"><span id="deposit-label">INSERT BOTTLE</span></button>
+
+        <nav class="kiosk-menu">
+          <button class="menu-row" type="button" data-sheet="rates">
+            <i data-lucide="wifi"></i>
+            Wi-Fi Rates
+          </button>
+          <button class="menu-row" type="button" data-sheet="help">
+            <i data-lucide="circle-help"></i>
+            Help
+          </button>
+          <button class="menu-row" type="button" data-sheet="report">
+            <i data-lucide="triangle-alert"></i>
+            Report a Problem
+          </button>
+          <a class="menu-row admin" href="admin/index.html">
+            <i data-lucide="gauge"></i>
+            Admin Dashboard
+          </a>
+        </nav>
+      </div>
+
+      <div id="deposit-view" class="deposit-view" hidden>
+        <div id="deposit-feedback" class="feedback" role="status" aria-live="polite">Deposit window open. Insert your bottle.</div>
+        <div class="session-stats">
+          <div><span>Bottles this session</span><strong id="session-bottles">0</strong></div>
+          <div><span>Last reward</span><strong id="last-reward">+0 min</strong></div>
+        </div>
+        <div id="deposit-controls" class="deposit-controls"><button id="finish-deposit" class="text-button">Finish deposit</button></div>
+      </div>
+
+    </section>
+
+    <details class="demo-panel"><summary id="preview-summary">Preview controls</summary><p id="preview-live-note" class="preview-live-note" hidden>Live SoftAP connected — Preview is demo-only and disabled so it does not fight the device.</p><label for="preview-state">Station state</label><select id="preview-state"><option value="ready">Ready</option><option value="accepted:large">Bottle accepted &mdash; 1L</option><option value="accepted:mismo">Bottle accepted &mdash; Mismo</option><option value="accepted:sakto">Bottle accepted &mdash; Sakto</option><option value="rejected">Bottle rejected</option><option value="busy">Busy</option><option value="full">Bin full</option><option value="maintenance">Maintenance</option><option value="offline">Offline</option><option value="expired">Session expired</option></select><button id="reset-demo" class="text-button">Reset sample data</button><p>Simulated connection in Demo mode. No internet access is granted.</p></details>
+  </main>
+
+  <div id="sheet-rates" class="sheet" hidden>
+    <div class="sheet-card" role="dialog" aria-modal="true" aria-label="Wi-Fi rates">
+      <h2>Wi-Fi Rates</h2>
+      <p>Your Wi-Fi time depends on the size of the bottle you insert.</p>
+      <div class="sheet-rate"><span><strong>1L bottle</strong><br><small id="weight-large">24&ndash;45 g</small></span><strong id="rate-large">10 minutes</strong></div>
+      <div class="sheet-rate"><span><strong>Mismo size</strong><br><small id="weight-mismo">17&ndash;24 g</small></span><strong id="rate-mismo">7 minutes</strong></div>
+      <div class="sheet-rate"><span><strong>Sakto size</strong><br><small id="weight-sakto">10&ndash;17 g</small></span><strong id="rate-sakto">5 minutes</strong></div>
+      <p>Time is added to your current session as soon as each bottle is accepted. Bottles outside these weights are returned.</p>
+      <button class="sheet-close" type="button">Got it</button>
+    </div>
+  </div>
+  <div id="sheet-help" class="sheet" hidden>
+    <div class="sheet-card" role="dialog" aria-modal="true" aria-label="Help">
+      <h2>Help</h2>
+      <ol>
+        <li>Tap <strong>INSERT BOTTLE</strong> to open the hatch.</li>
+        <li>Drop in one clean, empty PET bottle. Caps and labels are fine.</li>
+        <li>Bigger bottles earn more time: 1L <strong>10 min</strong>, Mismo <strong>7 min</strong>, Sakto <strong>5 min</strong>.</li>
+        <li>Wait for the machine to confirm. Your Wi-Fi time is added straight away.</li>
+        <li>Repeat for more time, then tap <strong>Finish deposit</strong>.</li>
+      </ol>
+      <p>Connect to the <strong>BottleNet</strong> Wi-Fi network on your device to use your time.</p>
+      <button class="sheet-close" type="button">Close</button>
+    </div>
+  </div>
+  <div id="sheet-report" class="sheet" hidden>
+    <div class="sheet-card report-card" role="dialog" aria-modal="true" aria-labelledby="report-title">
+      <header class="report-head">
+        <span class="report-head-icon" aria-hidden="true"><i data-lucide="triangle-alert"></i></span>
+        <div class="report-head-text">
+          <span class="report-eyebrow">BOTTLENET SYSTEM</span>
+          <h2 id="report-title">Report a Problem</h2>
+        </div>
+        <button class="sheet-close report-x" type="button" aria-label="Close">&times;</button>
+      </header>
+
+      <form id="report-form" class="report-body" novalidate>
+        <span class="field-label" id="report-type-label">Problem Type</span>
+        <div class="picker" id="report-type-picker">
+          <button type="button" class="report-field picker-button" id="report-type-button" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="report-type-label report-type-value">
+            <span class="picker-value is-placeholder" id="report-type-value">Select a problem</span>
+            <span class="picker-caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span>
+          </button>
+          <ul class="picker-list" id="report-type-list" role="listbox" aria-labelledby="report-type-label" tabindex="-1" hidden>
+            <li class="picker-option" role="option" data-value="" aria-selected="true">Select a problem</li>
+            <li class="picker-option" role="option" data-value="Machine not accepting bottles" aria-selected="false">Machine not accepting bottles</li>
+            <li class="picker-option" role="option" data-value="Bottle stuck" aria-selected="false">Bottle stuck</li>
+            <li class="picker-option" role="option" data-value="Wi-Fi not working" aria-selected="false">Wi-Fi not working</li>
+            <li class="picker-option" role="option" data-value="Other" aria-selected="false">Other</li>
+          </ul>
+        </div>
+
+        <label for="report-details">Description</label>
+        <textarea id="report-details" class="report-field" rows="3" placeholder="Tell us what happened"></textarea>
+
+        <p id="report-status" class="report-status" role="status" aria-live="polite"></p>
+        <button class="report-submit" type="submit"><i data-lucide="send"></i>SUBMIT REPORT</button>
+      </form>
+
+      <footer class="report-foot">
+        <span id="report-ready" class="report-ready"><span class="dot"></span>SYSTEM READY</span>
+        <button class="sheet-close report-close" type="button">CLOSE</button>
+      </footer>
+    </div>
+  </div>
+</body>
+</html>
