@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BottleNet | Connect</title>
+  <link rel="stylesheet" href="assets/css/styles.css"><link rel="stylesheet" href="assets/css/finishing.css"><link rel="stylesheet" href="assets/css/kiosk.css">
+  <script defer src="assets/js/store.js"></script><script defer src="assets/js/device.js"></script><script defer src="assets/js/portal.js"></script><script defer src="assets/js/kiosk.js"></script>
+  <script async src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" onload="window.dispatchEvent(new Event('icons-ready'))"></script><script defer src="assets/js/icons.js"></script>
+</head>
+<body class="kiosk-body">
+  <main class="kiosk-shell">
+    <section class="kiosk-card">
+      <div class="kiosk-brand">
+        <div class="kiosk-brand-row">
+          <div class="kiosk-brand-text">
+            <h1 class="kiosk-title">BottleNet</h1>
+          </div>
+          <div class="kiosk-logo" aria-hidden="true"><i data-lucide="recycle"></i></div>
+        </div>
+      </div>
+
+      <div id="deposit-heading" class="deposit-heading">
+        <h2>Insert your bottle</h2>
+        <p class="muted">Clean, empty PET bottles only. One bottle at a time.</p>
+      </div>
+
+      <div id="session-banner" class="session-banner" hidden>
+        <span class="eyebrow">YOUR TIME REMAINING</span>
+        <div id="timer" class="timer">--:--</div>
+        <div class="timer-track" role="progressbar" aria-labelledby="timer" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><div id="timer-fill" class="timer-fill"></div></div>
+        <span id="connection-badge" class="conn-pill"><span class="conn-dot" aria-hidden="true"></span><span id="connection-label">Connected</span></span>
+      </div>
+
+      <div id="home-view">
+        <div class="status-row"><div id="status-pill" class="status-pill"><span class="dot"></span><span id="status-text">Machine Ready</span></div><span id="mode-badge" class="mode-badge demo" title="Using sample demo data">Demo</span></div><p id="live-meta" class="live-meta muted" hidden></p>
+        <button id="deposit-button" class="kiosk-primary"><span id="deposit-label">INSERT BOTTLE</span></button>
+
+        <nav class="kiosk-menu">
+          <button class="menu-row" type="button" data-sheet="rates">
+            <i data-lucide="wifi"></i>
+            Wi-Fi Rates
+          </button>
+          <button class="menu-row" type="button" data-sheet="help">
+            <i data-lucide="circle-help"></i>
+            Help
+          </button>
+          <button class="menu-row" type="button" data-sheet="report">
+            <i data-lucide="triangle-alert"></i>
+            Report a Problem
+          </button>
+          <a class="menu-row admin" href="admin/index.html">
+            <i data-lucide="gauge"></i>
+            Admin Dashboard
+          </a>
+        </nav>
+      </div>
+
+      <div id="deposit-view" class="deposit-view" hidden>
+        <div id="deposit-feedback" class="feedback" role="status" aria-live="polite">Deposit window open. Insert your bottle.</div>
+        <div class="session-stats">
+          <div><span>Bottles this session</span><strong id="session-bottles">0</strong></div>
+          <div><span>Last reward</span><strong id="last-reward">+0 min</strong></div>
+        </div>
+        <div id="deposit-controls" class="deposit-controls"><button id="finish-deposit" class="text-button">Finish deposit</button></div>
+      </div>
+
+    </section>
+
+    <details class="demo-panel"><summary id="preview-summary">Preview controls</summary><p id="preview-live-note" class="preview-live-note" hidden>Live SoftAP connected — Preview is demo-only and disabled so it does not fight the device.</p><label for="preview-state">Station state</label><select id="preview-state"><option value="ready">Ready</option><option value="accepted:large">Bottle accepted &mdash; 1L</option><option value="accepted:mismo">Bottle accepted &mdash; Mismo</option><option value="accepted:sakto">Bottle accepted &mdash; Sakto</option><option value="rejected">Bottle rejected</option><option value="busy">Busy</option><option value="full">Bin full</option><option value="maintenance">Maintenance</option><option value="offline">Offline</option><option value="expired">Session expired</option></select><button id="reset-demo" class="text-button">Reset sample data</button><p>Simulated connection in Demo mode. No internet access is granted.</p></details>
+  </main>
+
+  <div id="sheet-rates" class="sheet" hidden>
+    <div class="sheet-card" role="dialog" aria-modal="true" aria-label="Wi-Fi rates">
+      <h2>Wi-Fi Rates</h2>
+      <p>Your Wi-Fi time depends on the size of the bottle you insert.</p>
+      <div class="sheet-rate"><span><strong>1L bottle</strong><br><small id="weight-large">24&ndash;45 g</small></span><strong id="rate-large">10 minutes</strong></div>
+      <div class="sheet-rate"><span><strong>Mismo size</strong><br><small id="weight-mismo">17&ndash;24 g</small></span><strong id="rate-mismo">7 minutes</strong></div>
+      <div class="sheet-rate"><span><strong>Sakto size</strong><br><small id="weight-sakto">10&ndash;17 g</small></span><strong id="rate-sakto">5 minutes</strong></div>
+      <p>Time is added to your current session as soon as each bottle is accepted. Bottles outside these weights are returned.</p>
+      <button class="sheet-close" type="button">Got it</button>
+    </div>
+  </div>
+  <div id="sheet-help" class="sheet" hidden>
+    <div class="sheet-card" role="dialog" aria-modal="true" aria-label="Help">
+      <h2>Help</h2>
+      <ol>
+        <li>Tap <strong>INSERT BOTTLE</strong> to open the hatch.</li>
+        <li>Drop in one clean, empty PET bottle. Caps and labels are fine.</li>
+        <li>Bigger bottles earn more time: 1L <strong>10 min</strong>, Mismo <strong>7 min</strong>, Sakto <strong>5 min</strong>.</li>
+        <li>Wait for the machine to confirm. Your Wi-Fi time is added straight away.</li>
+        <li>Repeat for more time, then tap <strong>Finish deposit</strong>.</li>
+      </ol>
+      <p>Connect to the <strong>BottleNet</strong> Wi-Fi network on your device to use your time.</p>
+      <button class="sheet-close" type="button">Close</button>
+    </div>
+  </div>
+  <div id="sheet-report" class="sheet" hidden>
+    <div class="sheet-card report-card" role="dialog" aria-modal="true" aria-labelledby="report-title">
+      <header class="report-head">
+        <span class="report-head-icon" aria-hidden="true"><i data-lucide="triangle-alert"></i></span>
+        <div class="report-head-text">
+          <span class="report-eyebrow">BOTTLENET SYSTEM</span>
+          <h2 id="report-title">Report a Problem</h2>
+        </div>
+        <button class="sheet-close report-x" type="button" aria-label="Close">&times;</button>
+      </header>
+
+      <form id="report-form" class="report-body" novalidate>
+        <span class="field-label" id="report-type-label">Problem Type</span>
+        <div class="picker" id="report-type-picker">
+          <button type="button" class="report-field picker-button" id="report-type-button" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="report-type-label report-type-value">
+            <span class="picker-value is-placeholder" id="report-type-value">Select a problem</span>
+            <span class="picker-caret" aria-hidden="true"><i data-lucide="chevron-down"></i></span>
+          </button>
+          <ul class="picker-list" id="report-type-list" role="listbox" aria-labelledby="report-type-label" tabindex="-1" hidden>
+            <li class="picker-option" role="option" data-value="" aria-selected="true">Select a problem</li>
+            <li class="picker-option" role="option" data-value="Machine not accepting bottles" aria-selected="false">Machine not accepting bottles</li>
+            <li class="picker-option" role="option" data-value="Bottle stuck" aria-selected="false">Bottle stuck</li>
+            <li class="picker-option" role="option" data-value="Wi-Fi not working" aria-selected="false">Wi-Fi not working</li>
+            <li class="picker-option" role="option" data-value="Other" aria-selected="false">Other</li>
+          </ul>
+        </div>
+
+        <label for="report-details">Description</label>
+        <textarea id="report-details" class="report-field" rows="3" placeholder="Tell us what happened"></textarea>
+
+        <p id="report-status" class="report-status" role="status" aria-live="polite"></p>
+        <button class="report-submit" type="submit"><i data-lucide="send"></i>SUBMIT REPORT</button>
+      </form>
+
+      <footer class="report-foot">
+        <span id="report-ready" class="report-ready"><span class="dot"></span>SYSTEM READY</span>
+        <button class="sheet-close report-close" type="button">CLOSE</button>
+      </footer>
+    </div>
+  </div>
+</body>
+</html>
